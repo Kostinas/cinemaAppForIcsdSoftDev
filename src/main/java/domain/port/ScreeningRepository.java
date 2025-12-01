@@ -15,7 +15,7 @@ public interface ScreeningRepository {
 
     List<Screening> findByProgram(ProgramId programId, ScreeningState state ,int offset , int limit);
 
-    List<Screening> findBySubmitter(ProgramId submitterId, ScreeningState state ,int offset , int limit);
+    List<Screening> findBySubmitter(UserId submitterId, ScreeningState state ,int offset , int limit);
 
     List<Screening> findByStaffMember(UserId staffId , int offset , int limit);
 
