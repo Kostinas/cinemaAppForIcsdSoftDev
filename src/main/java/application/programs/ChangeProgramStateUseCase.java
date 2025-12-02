@@ -11,11 +11,11 @@ import domain.service.ProgramStateMachine;
 
 public final class ChangeProgramStateUseCase {
     public final ProgramRepository programRepository;
-    public final ProgramStateMachine StateMachine;
+    public final ProgramStateMachine stateMachine;
 
     public ChangeProgramStateUseCase(ProgramRepository programRepository , ProgramStateMachine programStateMachine){
         this.programRepository = programRepository;
-        this.StateMachine = programStateMachine;
+        this.stateMachine = programStateMachine;
     }
 
     public void changeState(UserId userId,
@@ -29,8 +29,7 @@ public final class ChangeProgramStateUseCase {
             throw new AuthorizationException("Only programmers can change program state");
 
         ProgramState next = stateMachine.transition(program.state(), newState);
-        program.setState(next);
-
+        program.changeState(next);
         programRepository.save(program);
     }
 }

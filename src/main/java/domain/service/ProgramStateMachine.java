@@ -34,7 +34,7 @@ public final class ProgramStateMachine {
     }
 
 
-    public ProgramState requireTransition(ProgramState from, ProgramState to) {
+    public ProgramState transition(ProgramState from, ProgramState to) {
         if (!canTransition(from, to)) {
             throw new StateTransitionForbidden(
                     "Program cannot move from " + from + " to " + to);

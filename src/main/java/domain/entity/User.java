@@ -68,6 +68,7 @@ public class User {
     public boolean isLocked() { return failedAttempts >= 3; }
 
     public UserId id(){ return id; }
+    public BaseRole baseRole(){ return baseRole; }
     public Username username(){ return username; }
     public HashedPassword password(){ return password; }
     public String fullName(){ return fullName; }

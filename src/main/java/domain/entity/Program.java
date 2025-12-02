@@ -99,7 +99,7 @@ public class Program {
     public boolean isStaff(UserId userId){ return userId != null && staff.contains(userId); }
 
 
-    public void ChangeState(ProgramState nextState){
+    public void changeState(ProgramState nextState){
         if(nextState == null) throw new IllegalArgumentException("Next state cannot be null");
 
         this.state = nextState;
