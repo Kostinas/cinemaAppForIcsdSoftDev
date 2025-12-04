@@ -7,10 +7,14 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2Res
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TokenService {
     private final String secretKey;
     private final Long expirationSeconds;
+
+    private final Set<String> blacklistedTokens = ConcurrentHashMap.newKeySet();
 
     public TokenService(String secretKey , Long expirationSeconds){
         this.secretKey = secretKey;
@@ -31,6 +35,17 @@ public class TokenService {
                 .compact();
     }
 
+    public void invalidate(String token) {
+        if (token != null && !token.isBlank()) {
+            blacklistedTokens.add(token);
+        }
+    }
+    public boolean isInvalidated(String token) {
+        return blacklistedTokens.contains(token);
+    }
 
+    public void clearBlacklist() {
+        blacklistedTokens.clear();
+    }
 
 }

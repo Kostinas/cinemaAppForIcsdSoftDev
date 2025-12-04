@@ -1,35 +1,57 @@
 package application.users;
 
+import domain.Exceptions.AuthorizationException;
 import domain.Exceptions.NotFoundException;
 import domain.Exceptions.ValidationException;
 import domain.entity.User;
 import domain.entity.value.Username;
 import domain.port.UserRepository;
+import infrastructure.security.TokenService;
 
 public final class AuthenticateUserUseCase {
 
-    public final UserRepository userRepository;
 
+    private final UserRepository userRepository;
+    private final TokenService tokenService;
 
-    public AuthenticateUserUseCase(UserRepository userRepository){ this.userRepository = userRepository; }
+    public AuthenticateUserUseCase(UserRepository userRepository,
+                                   TokenService tokenService) {
+        this.userRepository = userRepository;
+        this.tokenService = tokenService;
+    }
 
-    public User authentication(String rawUsername , String rawPassword){
-
-        Username username = new Username(rawUsername);
-
-        User user = userRepository.findByUserName(username).orElseThrow(()-> new NotFoundException("User", "Invalid credentials"));
-
-        if(!user.isActive()){ throw new ValidationException("account" , "Account is deactivated"); }
-
-        if (!user.password().matches(rawPassword)){
-            user.registerFailedLogin();
-            userRepository.Save(user);
-            throw new ValidationException("password", "Invalid credentials");
+    /**
+     * Επιστρέφει JWT αν τα credentials είναι σωστά,
+     * αλλιώς πετάει AuthorizationException.
+     */
+    public String authenticate(String rawUsername, String rawPassword) {
+        if (rawUsername == null || rawUsername.isBlank() ||
+                rawPassword == null || rawPassword.isBlank()) {
+            throw new AuthorizationException("Invalid credentials");
         }
 
-        user.resetFailedAttempts();
-        return userRepository.Save(user);
+        Username username = Username.of(rawUsername);
 
+        User user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new AuthorizationException("Invalid username or password"));
+
+        if (!user.isActive() || user.isLocked()) {
+            throw new AuthorizationException("User is inactive or locked");
+        }
+
+        // Έλεγχος password (HashedPassword έχει μέθοδο matches)
+        if (!user.password().matches(rawPassword)) {
+            user.registerFailedLogin();
+            userRepository.Save(user);
+            throw new AuthorizationException("Invalid username or password");
+        }
+
+        // επιτυχία → μηδενίζουμε failedAttempts
+        user.resetFailedAttempts();
+        userRepository.Save(user);
+
+        // δημιουργούμε JWT
+        return tokenService.generateToken(user);
     }
 
 }
