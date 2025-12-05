@@ -20,8 +20,25 @@ public class SecurityConfig {
                 // Τι επιτρέπουμε χωρίς login
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/",                 // root
+                                "/index.html",       // το frontend
+                                "/static/**",
+                                "/public/**",
+                                "/css/**",
+                                "/js/**",
+
+                                // swagger
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+
+                                // H2 console
                                 "/h2-console/**",
-                                "/api/auth/**"     // login/register κτλ
+
+                                // 🔑 AUTH (login δημόσιο)
+                                "/api/auth/login",
+
+                                // 🧍 REGISTER USER (δημόσιο)
+                                "/api/users"          // POST /api/users
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

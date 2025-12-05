@@ -35,8 +35,10 @@ public final class RegisterUserUseCase {
 
         HashedPassword password = HashedPassword.fromRaw(rawPassword);
 
+        long randomId = UUID.randomUUID().getLeastSignificantBits() & Long.MAX_VALUE;
+
         User user = new User(
-                new UserId(UUID.randomUUID().clockSequence()),
+                new UserId(randomId),
                 username,
                 password,
                 fullName,
