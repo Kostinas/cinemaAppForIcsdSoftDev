@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public final class CreateProgramUseCase {
-    public final ProgramRepository programRepository;
+    private final ProgramRepository programRepository;
 
     public CreateProgramUseCase(ProgramRepository progrmaProgramRepository){ this.programRepository = progrmaProgramRepository; }
 

@@ -10,8 +10,8 @@ import domain.port.ProgramRepository;
 import domain.service.ProgramStateMachine;
 
 public final class ChangeProgramStateUseCase {
-    public final ProgramRepository programRepository;
-    public final ProgramStateMachine stateMachine;
+    private final ProgramRepository programRepository;
+    private final ProgramStateMachine stateMachine;
 
     public ChangeProgramStateUseCase(ProgramRepository programRepository , ProgramStateMachine programStateMachine){
         this.programRepository = programRepository;

@@ -7,7 +7,7 @@ import domain.entity.value.UserId;
 import domain.port.ProgramRepository;
 
 public final class DeleteProgramUseCase {
-    public final ProgramRepository programRepository;
+    private final ProgramRepository programRepository;
 
     public DeleteProgramUseCase(ProgramRepository programRepository){ this.programRepository = programRepository; }
 

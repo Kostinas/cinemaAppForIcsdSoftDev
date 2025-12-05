@@ -6,7 +6,7 @@ import domain.entity.value.ProgramId;
 import domain.port.ProgramRepository;
 
 public final class ViewProgramUseCase {
-    public final ProgramRepository programRepository;
+    private final ProgramRepository programRepository;
 
     public ViewProgramUseCase(ProgramRepository programRepository){ this.programRepository = programRepository; }
 

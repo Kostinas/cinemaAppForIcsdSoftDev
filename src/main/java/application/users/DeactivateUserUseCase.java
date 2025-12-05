@@ -7,7 +7,7 @@ import domain.port.UserRepository;
 
 public final class DeactivateUserUseCase {
 
-    public UserRepository userRepository;
+    private UserRepository userRepository;
 
     public DeactivateUserUseCase(UserRepository userRepository){ this.userRepository = userRepository; }
 

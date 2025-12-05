@@ -7,7 +7,7 @@ import domain.port.ProgramRepository;
 
 public final class AddProgrammerUseCase {
 
-    public final ProgramRepository programRepository;
+    private final ProgramRepository programRepository;
 
     public AddProgrammerUseCase(ProgramRepository programRepository){ this.programRepository = programRepository; }
 

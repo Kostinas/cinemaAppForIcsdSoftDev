@@ -20,10 +20,7 @@ public final class AuthenticateUserUseCase {
         this.tokenService = tokenService;
     }
 
-    /**
-     * Επιστρέφει JWT αν τα credentials είναι σωστά,
-     * αλλιώς πετάει AuthorizationException.
-     */
+
     public String authenticate(String rawUsername, String rawPassword) {
         if (rawUsername == null || rawUsername.isBlank() ||
                 rawPassword == null || rawPassword.isBlank()) {

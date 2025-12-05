@@ -10,7 +10,7 @@ import domain.port.ProgramRepository;
 import java.time.LocalDate;
 
 public final class UpdateProgramUseCase {
-    public final ProgramRepository programRepository;
+    private final ProgramRepository programRepository;
 
     public UpdateProgramUseCase(ProgramRepository programRepository){ this.programRepository = programRepository; }
 

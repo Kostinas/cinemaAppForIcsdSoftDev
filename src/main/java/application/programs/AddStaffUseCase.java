@@ -6,7 +6,7 @@ import domain.entity.value.UserId;
 import domain.port.ProgramRepository;
 
 public final class AddStaffUseCase {
-    public ProgramRepository programRepository;
+    private ProgramRepository programRepository;
 
     public AddStaffUseCase(ProgramRepository programRepository){ this.programRepository = programRepository; }
 

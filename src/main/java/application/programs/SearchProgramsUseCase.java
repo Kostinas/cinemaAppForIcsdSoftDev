@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public final class SearchProgramsUseCase {
-    public final ProgramRepository programRepository;
+    private final ProgramRepository programRepository;
 
     public SearchProgramsUseCase( ProgramRepository programRepository ){ this.programRepository = programRepository; }
 

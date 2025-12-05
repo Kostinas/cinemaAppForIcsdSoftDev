@@ -9,8 +9,8 @@ import domain.port.UserRepository;
 
 public final class ChangePasswordUseCase {
 
-    public final UserRepository userRepository;
-    public final PasswordPolicy passwordPolicy;
+    private final UserRepository userRepository;
+    private final PasswordPolicy passwordPolicy;
 
 
     public ChangePasswordUseCase(UserRepository userRepository , PasswordPolicy passwordPolicy){

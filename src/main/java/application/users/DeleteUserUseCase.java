@@ -6,7 +6,7 @@ import domain.entity.value.UserId;
 import domain.port.UserRepository;
 
 public final class DeleteUserUseCase {
-    public UserRepository userRepository;
+    private UserRepository userRepository;
 
     public DeleteUserUseCase(UserRepository userRepository){ this.userRepository = userRepository; }
     public void delete(UserId userId){
