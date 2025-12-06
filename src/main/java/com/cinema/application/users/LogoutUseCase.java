@@ -4,7 +4,7 @@ import com.cinema.infrastructure.security.TokenService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LogoutUseCase {
+public final class LogoutUseCase {
     private final TokenService tokenService;
 
     public LogoutUseCase(TokenService tokenService) {

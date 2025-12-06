@@ -1,4 +1,4 @@
 package com.cinema.presentation.dto.responses;
 
-public record AuthResponse(String token, Long userId, String role) {
+public record AuthResponse(String token, UserResponse user) {
 }

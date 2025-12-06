@@ -1,9 +1,16 @@
 package com.cinema.infrastructure.config;
 
+import com.cinema.infrastructure.security.TokenService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -12,46 +19,43 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                // Δεν θέλουμε CSRF για H2 και για τα API μας προς το παρόν
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**", "/api/**")
-                )
-
-                // Τι επιτρέπουμε χωρίς login
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/",                 // root
-                                "/index.html",       // το frontend
+                                "/",
+                                "/index.html",
                                 "/static/**",
                                 "/public/**",
-                                "/css/**",
-                                "/js/**",
-
-                                // swagger
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-
-                                // H2 console
                                 "/h2-console/**",
 
-                                // 🔑 AUTH (login δημόσιο)
+                                // 🔑 AUTH endpoints δημόσια
                                 "/api/auth/login",
-
-                                // 🧍 REGISTER USER (δημόσιο)
-                                "/api/users"          // POST /api/users
+                                "/api/auth/register"
                         ).permitAll()
+
                         .anyRequest().authenticated()
                 )
-
-                // H2 console χρησιμοποιεί frame, οπότε επιτρέπουμε από same-origin
-                .headers(headers -> headers
-                        .frameOptions(frame -> frame.sameOrigin())
-                )
-
-                // Προς το παρόν δεν θέλουμε default login form του Spring
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable());
 
         return http.build();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
 }
