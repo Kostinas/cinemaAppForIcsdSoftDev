@@ -1,8 +1,14 @@
-export type UserRole = "ADMIN" | "STAFF" | "PROGRAMMER" | "USER";
+// src/types/user.ts
+export type Role =
+| "VISITOR"
+| "USER"
+| "PROGRAMMER"
+| "STAFF"
+| "SUBMITTER"
+| "ADMIN";
 
-export interface User {
-    id: number;
+export interface AuthUser {
+id: number;
 username: string;
-fullName: string;
-baseRole: UserRole;
+role: Role;
 }

@@ -1,9 +1,17 @@
+// src/App.tsx
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
+import {
+  canViewPrograms,
+  canViewScreenings,
+  isStaff,
+  isAdmin
+} from "./security/permissions";
 
 const App: React.FC = () => {
   const { user, logout } = useAuth();
+  const role = user?.role;
 
   return (
     <div className="app-layout">
@@ -22,25 +30,22 @@ const App: React.FC = () => {
             Dashboard
           </NavLink>
 
-          {(user?.role === "PROGRAMMER" || user?.role === "ADMIN") && (
-            <>
-              <NavLink to="/programs">Programs</NavLink>
-              <NavLink to="/screenings">Screenings</NavLink>
-            </>
+          {canViewPrograms(role) && (
+            <NavLink to="/programs">Programs</NavLink>
           )}
 
-          {user?.role === "STAFF" && (
+          {canViewScreenings(role) && (
+            <NavLink to="/screenings">Screenings</NavLink>
+          )}
+
+          {isStaff(role) && (
             <>
               <NavLink to="/tickets">Tickets</NavLink>
               <NavLink to="/reservations">Reservations</NavLink>
             </>
           )}
 
-          {user?.role === "ADMIN" && (
-            <>
-              <NavLink to="/users">Users</NavLink>
-            </>
-          )}
+          {isAdmin(role) && <NavLink to="/users">Users</NavLink>}
         </nav>
 
         <div className="sidebar-footer">

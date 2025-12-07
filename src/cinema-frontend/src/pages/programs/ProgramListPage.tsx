@@ -1,12 +1,17 @@
+// src/pages/programs/ProgramListPage.tsx
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { programsApi } from "../../api/programsApi";
 import type { Program } from "../../types/program";
+import { useAuth } from "../../context/AuthContext";
+import { canCreatePrograms } from "../../security/permissions";
 
 const ProgramListPage: React.FC = () => {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const load = async () => {
@@ -27,22 +32,16 @@ const ProgramListPage: React.FC = () => {
     void load();
   }, []);
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Σίγουρα διαγραφή;")) return;
-    try {
-      await programsApi.delete(id);
-      await load();
-    } catch (err) {
-      console.error(err);
-      alert("Αποτυχία διαγραφής");
-    }
-  };
-
   return (
     <div>
       <div className="page-header">
         <h1>Programs</h1>
-        <button onClick={() => navigate("/programs/new")}>+ New Program</button>
+
+        {canCreatePrograms(user?.role) && (
+          <button onClick={() => navigate("/programs/new")}>
+            + New Program
+          </button>
+        )}
       </div>
 
       {loading && <div>Loading...</div>}
@@ -52,31 +51,22 @@ const ProgramListPage: React.FC = () => {
         <table className="data-table">
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Title</th>
+              <th>Year</th>
               <th>State</th>
-              <th>Start</th>
-              <th>End</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {programs.map(p => (
-              <tr key={p.id}>
-                <td>
-                  <Link to={`/programs/${p.id}`}>{p.name}</Link>
-                </td>
+              <tr key={p.id} onClick={() => navigate(`/programs/${p.id}`)}>
+                <td>{p.title}</td>
+                <td>{p.year}</td>
                 <td>{p.state}</td>
-                <td>{p.startDate}</td>
-                <td>{p.endDate}</td>
-                <td>
-                  <button onClick={() => navigate(`/programs/${p.id}`)}>Edit</button>
-                  <button onClick={() => handleDelete(p.id)}>Delete</button>
-                </td>
               </tr>
             ))}
             {programs.length === 0 && (
               <tr>
-                <td colSpan={5}>No programs</td>
+                <td colSpan={3}>No programs</td>
               </tr>
             )}
           </tbody>

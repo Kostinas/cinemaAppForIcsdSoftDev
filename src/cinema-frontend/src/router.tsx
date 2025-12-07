@@ -1,3 +1,4 @@
+// src/router.tsx
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -22,17 +23,17 @@ import StaffTicketsPage from "./pages/staff/StaffTicketsPage";
 import StaffReservationsPage from "./pages/staff/StaffReservationsPage";
 
 export const router = createBrowserRouter([
-  // ---------- PUBLIC ROUTES ----------
+  // 🔐 Public auth routes
   {
     path: "/login",
-    element: <LoginPage />,
+    element: <LoginPage />
   },
   {
     path: "/register",
-    element: <RegisterPage />,
+    element: <RegisterPage />
   },
 
-  // ---------- PROTECTED AREA ----------
+  // 🔐 Protected app
   {
     path: "/",
     element: (
@@ -41,72 +42,111 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      // dashboard (όλοι οι logged-in)
       {
         index: true,
-        element: <DashboardPage />,
+        element: <DashboardPage />
       },
 
-      // PROGRAMMER + ADMIN: Programs
+      // ---------------------------------
+      // PROGRAMS
+      // ---------------------------------
+
+      // View/search programs: όλοι εκτός ADMIN
       {
         path: "programs",
         element: (
-          <RoleRoute roles={["PROGRAMMER", "ADMIN"]}>
+          <RoleRoute
+            roles={[
+              "VISITOR",
+              "USER",
+              "PROGRAMMER",
+              "STAFF",
+              "SUBMITTER"
+            ]}
+          >
             <ProgramListPage />
           </RoleRoute>
-        ),
+        )
       },
+
+      // Create/update programs:
+      // USER, PROGRAMMER, STAFF, SUBMITTER
       {
         path: "programs/new",
         element: (
-          <RoleRoute roles={["PROGRAMMER", "ADMIN"]}>
+          <RoleRoute
+            roles={["USER", "PROGRAMMER", "STAFF", "SUBMITTER"]}
+          >
             <ProgramFormPage />
           </RoleRoute>
-        ),
+        )
       },
       {
         path: "programs/:id",
         element: (
-          <RoleRoute roles={["PROGRAMMER", "ADMIN"]}>
+          <RoleRoute
+            roles={["USER", "PROGRAMMER", "STAFF", "SUBMITTER"]}
+          >
             <ProgramFormPage />
           </RoleRoute>
-        ),
+        )
       },
 
-      // PROGRAMMER + ADMIN: Screenings
+      // ---------------------------------
+      // SCREENINGS
+      // ---------------------------------
+
+      // View/search screenings: όλοι εκτός ADMIN
       {
         path: "screenings",
         element: (
-          <RoleRoute roles={["PROGRAMMER", "ADMIN"]}>
+          <RoleRoute
+            roles={[
+              "VISITOR",
+              "USER",
+              "PROGRAMMER",
+              "STAFF",
+              "SUBMITTER"
+            ]}
+          >
             <ScreeningListPage />
           </RoleRoute>
-        ),
+        )
       },
+
+      // Create/update screenings:
+      // USER, PROGRAMMER, STAFF, SUBMITTER
       {
         path: "screenings/new",
         element: (
-          <RoleRoute roles={["PROGRAMMER", "ADMIN"]}>
+          <RoleRoute
+            roles={["USER", "PROGRAMMER", "STAFF", "SUBMITTER"]}
+          >
             <ScreeningFormPage />
           </RoleRoute>
-        ),
+        )
       },
       {
         path: "screenings/:id",
         element: (
-          <RoleRoute roles={["PROGRAMMER", "ADMIN"]}>
+          <RoleRoute
+            roles={["USER", "PROGRAMMER", "STAFF", "SUBMITTER"]}
+          >
             <ScreeningFormPage />
           </RoleRoute>
-        ),
+        )
       },
 
-      // STAFF: tickets / reservations
+      // ---------------------------------
+      // STAFF pages (review assigned screenings, tickets κτλ.)
+      // ---------------------------------
       {
         path: "tickets",
         element: (
           <RoleRoute roles={["STAFF"]}>
             <StaffTicketsPage />
           </RoleRoute>
-        ),
+        )
       },
       {
         path: "reservations",
@@ -114,18 +154,20 @@ export const router = createBrowserRouter([
           <RoleRoute roles={["STAFF"]}>
             <StaffReservationsPage />
           </RoleRoute>
-        ),
+        )
       },
 
-      // ADMIN: Users
+      // ---------------------------------
+      // ADMIN – user management ONLY
+      // ---------------------------------
       {
         path: "users",
         element: (
           <RoleRoute roles={["ADMIN"]}>
             <UserListPage />
           </RoleRoute>
-        ),
-      },
-    ],
-  },
+        )
+      }
+    ]
+  }
 ]);
